@@ -1,4 +1,4 @@
-# sreeram-plugins
+# harness-plugins
 
 Skills I use across projects, packaged for Claude Code, OpenCode, and Codex.
 Each skill is written once under `skills/` in the
@@ -27,9 +27,9 @@ claude plugin marketplace add fishinakleinbottle/harness-plugins
 Then install the plugins you want:
 
 ```
-/plugin install review-layer@sreeram-plugins
-/plugin install task-dispatch@sreeram-plugins
-/plugin install pre-pr-test-coverage@sreeram-plugins
+/plugin install review-layer@harness-plugins
+/plugin install task-dispatch@harness-plugins
+/plugin install pre-pr-test-coverage@harness-plugins
 ```
 
 To load a plugin for one session without installing it:
@@ -211,7 +211,7 @@ when they drift. The worker's text lives in `skills/task-dispatch/worker.md`.
 
 To release a new version of a plugin, change `version` in its `plugin.json`
 and push. Claude Code users receive it with
-`claude plugin update <name>@sreeram-plugins`.
+`claude plugin update <name>@harness-plugins`.
 
 ## License
 
