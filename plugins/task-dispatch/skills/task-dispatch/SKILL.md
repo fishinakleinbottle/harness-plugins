@@ -7,7 +7,8 @@ description: Use when asked to work through, execute, or finish a list of tracke
 
 This session is the control panel. Each task goes to a fresh `task-worker`
 agent that works in its own context window, commits once, and reports back in
-a fixed shape. You read every report, review every diff yourself, and keep the
+a fixed shape. The worker's instructions live in `worker.md` next to this
+file; each harness installs them as an agent named `task-worker`. You read every report, review every diff yourself, and keep the
 task tracker as the single source of truth.
 
 **Core principle:** the tracker's state changes only through a task's own
@@ -48,9 +49,17 @@ and confirm the file with the owner before dispatching.
    didn't author. If HEAD is on `main` or `master`, create a branch named
    after the task list and say so. List the ready tasks. If the owner named the
    exact tasks, go. Otherwise show the list and confirm the batch.
-2. **Dispatch one task.** Use the Agent tool with `subagent_type` set to
-   `task-dispatch:task-worker` and the message from the template below. One
-   worker at a time, always. Two workers in one tree collide on shared files,
+2. **Dispatch one task.** Hand the message from the template below to the
+   `task-worker` agent through your harness's subagent tool:
+
+   | Harness | How to dispatch |
+   |---|---|
+   | Claude Code | Agent tool, `subagent_type: task-dispatch:task-worker` |
+   | OpenCode | Task tool, the `task-worker` subagent |
+   | Codex | Spawn the custom agent named `task-worker` |
+   | No `task-worker` agent installed | A general subagent; start the message with "Read `<skill-dir>/worker.md` and follow it exactly", where `<skill-dir>` is this skill's folder |
+
+   One worker at a time, always. Two workers in one tree collide on shared files,
    and the worker's clean-tree check fails for the second one. Don't create
    worktrees for workers; `bd` state doesn't follow them.
 3. **Read the report.** It starts with `Status: DONE` or `Status: BLOCKED`.
@@ -63,14 +72,16 @@ and confirm the file with the owner before dispatching.
    - The tracker moved: the bead is CLOSED, or the bullet is ticked in that
      same commit.
 
-   Anything off: send the same worker a message with the Agent's ID that
-   names the defect and the fix, wait for its new report, and review again.
-   Don't fix the worker's commit yourself.
+   Anything off: resume the same worker with a message that names the defect
+   and the fix, wait for its new report, and review again. If your harness
+   can't resume a finished subagent, dispatch a fresh worker with the same
+   template and the defect under `Extra context`. Don't fix the worker's
+   commit yourself.
 5. **BLOCKED: don't rule.** The worker stopped because a spec, file, or
    decision is missing. Record its `Need:` line, leave the task open, and move
    to the next task that doesn't depend on it. When the owner already answered
-   that question in this conversation, resume the worker with the answer and
-   nothing else.
+   that question in this conversation, resume the worker, or dispatch a fresh
+   one, with the answer and nothing else.
 6. **Repeat** from step 2 until the batch is done or every remaining task is
    blocked.
 7. **Close out** with the summary below. Push, merge, or open a PR only when

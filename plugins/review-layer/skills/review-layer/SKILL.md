@@ -22,15 +22,16 @@ library, so there is nothing to install beyond Python 3 and Chrome.
 | `review-layer.css`, `review-layer.js` | The layer itself. `review.py add` inlines both into the page |
 | `SKILL.md` | This workflow |
 
-The commands in this file use `${CLAUDE_SKILL_DIR}`, which Claude Code replaces
-with this folder's path, wherever the plugin is installed.
+The commands in this file write `<skill-dir>` for this skill's folder. Your
+harness names that folder when it loads the skill; run `review.py` by its
+absolute path from any working directory.
 
 ## Add the layer to a page
 
 After you write a standalone HTML deliverable, run:
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/review.py add path/to/page.html
+python3 <skill-dir>/review.py add path/to/page.html
 ```
 
 This inlines the layer before `</body>`, between `review-layer:start` and
@@ -63,7 +64,7 @@ To get the best results from the page:
 1. List what's waiting:
 
    ```bash
-   python3 ${CLAUDE_SKILL_DIR}/review.py status path/to/page.html
+   python3 <skill-dir>/review.py status path/to/page.html
    ```
 
    If it reports that the page's layer is out of date, run `review.py add` on
@@ -79,7 +80,7 @@ To get the best results from the page:
 3. Reply to each comment you handled:
 
    ```bash
-   python3 ${CLAUDE_SKILL_DIR}/review.py reply path/to/page.html c-abc123 \
+   python3 <skill-dir>/review.py reply path/to/page.html c-abc123 \
      --body "What changed, or the answer."
    ```
 
@@ -89,7 +90,7 @@ To get the best results from the page:
 4. If you changed the page content, run this once at the end:
 
    ```bash
-   python3 ${CLAUDE_SKILL_DIR}/review.py bump path/to/page.html
+   python3 <skill-dir>/review.py bump path/to/page.html
    ```
 
    If the page is open, it then shows a banner asking the reviewer to reload.

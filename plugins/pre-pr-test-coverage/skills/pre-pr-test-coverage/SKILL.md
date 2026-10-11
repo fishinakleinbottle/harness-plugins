@@ -17,6 +17,10 @@ gap means and which test to write first.
 script. You never count statements, tests, or endpoints by hand, and you
 never invent a threshold the repo doesn't configure.
 
+**Script path:** `coverage_signals.py` sits next to this file. Your harness
+names this skill's folder when it loads the skill. Below, `<skill-dir>` is
+that folder; run the script by its absolute path from the repo root.
+
 ## Steps
 
 1. **Find the runner.** `uv.lock` means `uv run pytest`; `poetry.lock` means
@@ -38,7 +42,7 @@ never invent a threshold the repo doesn't configure.
    configured path when one exists:
 
    ```bash
-   python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code <code> --json .ai/coverage/signals.json
+   python3 <skill-dir>/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code <code> --json .ai/coverage/signals.json
    ```
 
    It prints a Markdown report with the gates, per-file coverage with deltas,
@@ -59,7 +63,7 @@ never invent a threshold the repo doesn't configure.
 6. **Save the baseline**, only when the tests passed:
 
    ```bash
-   python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code 0 --write-baseline .ai/coverage/baseline.json > /dev/null
+   python3 <skill-dir>/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code 0 --write-baseline .ai/coverage/baseline.json > /dev/null
    ```
 
    Tell the owner to commit `.ai/coverage/baseline.json` and the report with
@@ -119,8 +123,8 @@ Optional `[tool.pre-pr-test-coverage]` section in `pyproject.toml`:
 ## Quick reference
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --help
-python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code 0            # report only
-python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --repo . --coverage coverage.json --no-baseline                   # ignore the baseline
-python3 ${CLAUDE_SKILL_DIR}/coverage_signals.py --repo . --coverage coverage.json --write-baseline .ai/coverage/baseline.json
+python3 <skill-dir>/coverage_signals.py --help
+python3 <skill-dir>/coverage_signals.py --repo . --coverage coverage.json --pytest-exit-code 0            # report only
+python3 <skill-dir>/coverage_signals.py --repo . --coverage coverage.json --no-baseline                   # ignore the baseline
+python3 <skill-dir>/coverage_signals.py --repo . --coverage coverage.json --write-baseline .ai/coverage/baseline.json
 ```
