@@ -1,0 +1,4 @@
+.DS_Store
+plugins/*/evals/results/
+__pycache__/
+.pytest_cache/

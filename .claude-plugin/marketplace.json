@@ -1,0 +1,24 @@
+{
+  "name": "sreeram-plugins",
+  "description": "Claude Code plugins by Sreeram Ramasubramanian",
+  "owner": {
+    "name": "Sreeram Ramasubramanian"
+  },
+  "plugins": [
+    {
+      "name": "review-layer",
+      "source": "./plugins/review-layer",
+      "description": "Mark up any HTML page Claude writes: comment in Chrome, then have Claude act on the comments and reply in the page"
+    },
+    {
+      "name": "task-dispatch",
+      "source": "./plugins/task-dispatch",
+      "description": "Work through a tracked task list, from bd beads or a Markdown checklist, by sending each task to a fresh worker agent that commits and reports back"
+    },
+    {
+      "name": "pre-pr-test-coverage",
+      "source": "./plugins/pre-pr-test-coverage",
+      "description": "Pre-PR test coverage check for Python repos: coverage.py numbers plus deterministic signals (untested endpoints, ghost tests, quality gates) against a saved baseline"
+    }
+  ]
+}

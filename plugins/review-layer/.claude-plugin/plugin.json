@@ -1,0 +1,10 @@
+{
+  "name": "review-layer",
+  "description": "Mark up any HTML page Claude writes: comment in Chrome, then have Claude act on the comments and reply in the page",
+  "version": "1.0.0",
+  "author": {
+    "name": "Sreeram Ramasubramanian"
+  },
+  "license": "MIT",
+  "keywords": ["review", "comments", "html", "feedback", "markup"]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "pre-pr-test-coverage",
+  "description": "Pre-PR test coverage check for Python repos: coverage.py numbers plus deterministic signals (untested endpoints, ghost tests, modules without tests, quality gates) compared against a saved baseline",
+  "version": "0.1.0",
+  "author": {
+    "name": "Sreeram Ramasubramanian"
+  },
+  "license": "MIT",
+  "keywords": ["coverage", "pytest", "pytest-cov", "quality-gates", "endpoints", "ghost-tests", "python", "pull-request"]
+}

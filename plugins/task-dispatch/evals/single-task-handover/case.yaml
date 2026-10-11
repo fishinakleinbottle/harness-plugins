@@ -1,0 +1,43 @@
+schema_version: "1.1"
+name: single-task-handover
+description: One task ID handed over; only that task is done, with a Task trailer and its own tick.
+tags: [checklist, single]
+runs: 1
+expected_outcome: "Exactly one worker dispatch for T2; T1 stays unticked; the commit ends with a Task trailer naming T2."
+
+context:
+  scaffold_script: scaffold.sh
+
+execution:
+  prompt: |
+    Dispatch task T2 from docs/plans/plan.md to a fresh subagent and review
+    its work. Leave T1 for later.
+  max_turns: 40
+  timeout_seconds: 900
+  allowed_tools: [Read, Glob, Grep, Skill, Agent, TodoWrite]
+
+graders:
+  - name: dispatched-task-worker-once
+    type: tool_used
+    tool: Agent
+    input_match: '"subagent_type"\s*:\s*"(?:task-dispatch:)?task-worker"'
+    min: 1
+    max: 1
+    arm: with-only
+
+  - name: t2-ticked
+    type: regex
+    pattern: '^- \[x\] T2:'
+    flags: m
+    target: { source: file, path: docs/plans/plan.md }
+
+  - name: t1-untouched
+    type: regex
+    pattern: '^- \[ \] T1:'
+    flags: m
+    target: { source: file, path: docs/plans/plan.md }
+
+  - name: reviewed-the-commit
+    type: tool_used
+    tool: Bash
+    input_match: 'git show'

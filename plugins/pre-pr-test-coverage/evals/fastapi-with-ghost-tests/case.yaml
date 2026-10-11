@@ -1,0 +1,78 @@
+schema_version: "1.1"
+name: fastapi-with-ghost-tests
+description: Pre-PR check on a FastAPI repo with known gaps. The report must come from the script's signals, name the untested and weak endpoints and the ghost tests, and save a baseline.
+tags: [python, fastapi, needs-uv]
+runs: 1
+expected_outcome: "Report at .ai/latest-coverage-report.md built on the script's tables; baseline at .ai/coverage/baseline.json; DELETE /items/{item_id} and PUT /users/{user_id} listed as untested, POST /items as weak; no invented coverage floor."
+
+context:
+  scaffold_script: scaffold.sh
+
+execution:
+  prompt: |
+    I'm about to open a PR from this branch. Run a pre-PR test coverage
+    check: go beyond the line percentage and tell me about untested
+    endpoints, weak or ghost tests, and whether this would pass sensible
+    quality gates. Write the report to .ai/latest-coverage-report.md so the
+    next run can compare against it.
+  max_turns: 60
+  timeout_seconds: 1200
+  allowed_tools: [Read, Glob, Grep, Skill, TodoWrite]
+
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?pre-pr-test-coverage"'
+
+  - name: ran-the-script
+    type: tool_used
+    tool: Bash
+    input_match: 'coverage_signals\.py'
+    arm: with-only
+
+  - name: report-written
+    type: file_exists
+    path: .ai/latest-coverage-report.md
+
+  - name: baseline-written
+    type: file_exists
+    path: .ai/coverage/baseline.json
+    arm: with-only
+
+  - name: report-names-untested-endpoints
+    type: regex
+    pattern: 'DELETE[^\n]*/items/\{item_id\}[\s\S]*PUT[^\n]*/users/\{user_id\}|PUT[^\n]*/users/\{user_id\}[\s\S]*DELETE[^\n]*/items/\{item_id\}'
+    target: { source: file, path: .ai/latest-coverage-report.md }
+    weight: 2
+
+  - name: report-names-weak-endpoint
+    type: regex
+    pattern: 'POST[^\n]*/items[^\n]*weak'
+    flags: i
+    target: { source: file, path: .ai/latest-coverage-report.md }
+    arm: with-only
+
+  - name: report-lists-ghost-tests
+    type: regex
+    pattern: 'test_todo_delete[\s\S]*test_always_true|test_always_true[\s\S]*test_todo_delete'
+    target: { source: file, path: .ai/latest-coverage-report.md }
+
+  - name: report-shape
+    type: llm
+    focus: { source: file, path: .ai/latest-coverage-report.md }
+    criteria: |
+      PASS if the report contains all of these: a header table with the pytest
+      command and result; a PASS or FAIL verdict; a gates table in which the
+      overall-floor gate is marked skipped (the repo configures no overall
+      floor); a per-file coverage table; an endpoints table followed by a
+      numbered "Tests to add" list; a ghost tests table with an action per
+      row; and a modules-without-tests part.
+
+      The plugin's own documented defaults are legitimate: a 50% floor for new
+      or never-executed files, and the regression allowances. Citing them is
+      not a fail.
+
+      FAIL only if the report states an overall coverage target the repo never
+      configured (for example "coverage must reach 80%") as a requirement, or
+      if the report is longer than about 150 lines.

@@ -1,0 +1,10 @@
+{
+  "name": "task-dispatch",
+  "description": "Work through a tracked task list, from bd beads or a Markdown checklist, by sending each task to a fresh worker agent that commits and reports back",
+  "version": "0.1.0",
+  "author": {
+    "name": "Sreeram Ramasubramanian"
+  },
+  "license": "MIT",
+  "keywords": ["tasks", "beads", "bd", "checklist", "subagents", "orchestration", "worktree"]
+}
