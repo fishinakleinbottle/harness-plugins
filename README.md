@@ -15,13 +15,13 @@ when a new version is released.
 In a Claude Code session:
 
 ```
-/plugin marketplace add fishinakleinbottle/sreeram-plugins
+/plugin marketplace add fishinakleinbottle/harness-plugins
 ```
 
 Or from your shell:
 
 ```bash
-claude plugin marketplace add fishinakleinbottle/sreeram-plugins
+claude plugin marketplace add fishinakleinbottle/harness-plugins
 ```
 
 Then install the plugins you want:
@@ -45,7 +45,7 @@ Any harness that reads `SKILL.md` can use the skills. The
 `.agents/skills/` and links the folder each installed agent reads:
 
 ```bash
-npx skills add fishinakleinbottle/sreeram-plugins
+npx skills add fishinakleinbottle/harness-plugins
 ```
 
 To install by hand, copy `skills/<name>/` to `.agents/skills/<name>/` in the
